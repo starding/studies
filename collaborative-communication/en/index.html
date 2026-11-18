@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Guide to Collaborative Communication</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+:root{
+  --brand:#B5F700; --blue:#8FB8DA; --amber:#F3C374;
+  --font:"Outfit","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --page:#DFE2D8;
+  --bg:#F5F6F1; --surface:#FFFFFF; --surface-2:#EEF0E8;
+  --ink:#0B0C0A; --ink-2:#464B42; --ink-3:#7F857A; --line:#DFE2D7; --line-2:#C9CEC0;
+  --accent-ink:#4D6B00; --focus:#9BD400;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --page:#1A1D17;
+    --bg:#000000; --surface:#0C0E0B; --surface-2:#141712;
+    --ink:#F1F4EC; --ink-2:#B4BAAE; --ink-3:#7D8478; --line:#1F231C; --line-2:#2F352B;
+    --accent-ink:#B5F700; --focus:#B5F700;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--page);color:var(--ink)}
+body{font-family:var(--font);-webkit-font-smoothing:antialiased;line-height:1.5;padding:24px 0}
+h1,h2,h3,p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:5px}
+a:hover{text-decoration-color:var(--focus)}
+
+.slide{width:1600px;height:900px;position:relative;overflow:hidden;background:var(--bg);margin:0 auto 32px;isolation:isolate;border-radius:28px;box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 6%,transparent),0 40px 90px -40px rgba(0,0,0,.45)}
+.deck body{overflow:hidden;padding:0}
+.deck .slide{position:fixed;left:50%;top:50%;margin:0;transform-origin:center;visibility:hidden;pointer-events:none}
+.deck .slide.on{visibility:visible;pointer-events:auto}
+.pad{position:absolute;inset:88px 120px 100px}
+.dark{background:#000;color:#F1F4EC;--ink:#F1F4EC;--ink-2:#B4BAAE;--ink-3:#7D8478;--line:#1F231C;--line-2:#2F352B;--surface:#0C0E0B;--surface-2:#141712;--focus:#B5F700;--accent-ink:#B5F700}
+
+.h-xl{font-weight:300;font-size:116px;line-height:1.06;letter-spacing:-.02em}
+.h-lg{font-weight:500;font-size:46px;line-height:1.22;letter-spacing:-.01em}
+.sub{font-weight:300;font-size:23px;line-height:1.6;color:var(--ink-2);margin-top:14px;max-width:1260px}
+.eyebrow{font-size:17px;font-weight:500;color:var(--accent-ink);margin-bottom:14px}
+.foot{position:absolute;left:0;right:0;bottom:0;padding-top:16px;border-top:1px solid var(--line);font-size:18px;font-weight:300;color:var(--ink-3)}
+.foot b{font-weight:500;color:var(--ink-2)}
+.pgno{position:absolute;top:46px;right:120px;font-size:18px;font-weight:500;opacity:.45;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.body{margin-top:36px}
+.on-brand{background:var(--brand);color:#0B0C0A}
+
+.term{border:0;background:none;padding:0;font:inherit;color:inherit;border-bottom:1.5px dashed var(--line-2);cursor:help}
+.pop{position:absolute;z-index:5;width:400px;background:var(--surface);color:var(--ink);border-radius:12px;box-shadow:0 0 0 1px var(--line),0 18px 40px -12px rgba(0,0,0,.25);padding:14px 16px;font-size:17px;font-weight:300;line-height:1.6;display:none}
+.pop b{font-weight:500}
+.pop small{display:block;font-size:14px;color:var(--ink-3);margin-top:6px}
+
+.cover .cvt{margin-top:44px}
+.cover .h-xl .pre{display:block;font-size:50px;font-weight:300;line-height:1.3;letter-spacing:0;color:var(--brand);margin-bottom:6px}
+.cover .cr{background:#171A15;border:1px solid #2F352B;border-radius:14px;padding:18px 24px;font-size:22px;color:#F1F4EC;line-height:1.55}
+.cover .cr span{color:var(--brand);font-weight:500;margin-right:14px}
+.cover .cl{position:relative;height:36px}
+.cover .cl::before{content:"";position:absolute;left:50%;top:0;height:18px;border-left:2px solid #3B4236}
+.cover .cl::after{content:"";position:absolute;left:16.67%;right:16.67%;top:18px;height:18px;border:2px solid #3B4236;border-bottom:0}
+.cover .cl i{position:absolute;left:50%;top:18px;height:18px;border-left:2px solid #3B4236}
+.cover .cb{display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px}
+.cover .cb>div{background:#171A15;border:1px solid #2F352B;border-radius:14px;padding:20px 24px 24px}
+.cover .cb .pt{font-size:14px;color:#7D8478}
+.cover .cb h3{font-size:32px;font-weight:500;margin:2px 0 6px}
+.cover .cb .b1 h3{color:var(--brand)}.cover .cb .b2 h3{color:#8FB8DA}.cover .cb .b3 h3{color:#F0A12E}
+.cover .cb p:last-child{font-size:19px;color:#B4BAAE;line-height:1.5}
+.cover .facts{position:absolute;left:0;bottom:8px;display:flex;gap:72px}
+.cover .facts b{display:block;font-size:24px;font-weight:500;color:#F1F4EC}
+.cover .facts span{font-size:16px;color:#7D8478}
+
+.one{display:grid;grid-template-columns:560px 1fr;column-gap:56px;align-items:center}
+.ring{display:block;width:100%;height:auto}
+.ring text{font-family:var(--font);text-anchor:middle}
+.ring .rn{font-size:26px;font-weight:500;fill:var(--ink)}
+.ring .rs{font-size:14px;fill:var(--ink-3)}
+.ring .rc{font-size:20px;font-weight:500;fill:var(--ink-2)}
+.ring text[fill]{fill:#0B0C0A}
+.ax li{position:relative;padding:22px 0 22px 58px;border-top:1px solid var(--line);font-size:21px;font-weight:300;line-height:1.55;color:var(--ink-2)}
+.ax li:first-child{border-top:0}
+.ax li b{display:block;font-size:27px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.ax li .nb{position:absolute;left:0;top:24px}
+.mdl{display:grid;grid-template-columns:1fr 440px;column-gap:44px;align-items:start}
+.mdl .grid{display:grid;grid-template-columns:150px 1.25fr 1fr 1fr 1.25fr;column-gap:26px;row-gap:0;align-items:stretch}
+.mdl .hd{font-size:16px;font-weight:500;text-align:center;border-radius:14px 14px 0 0;padding:10px 8px}
+.mdl .hd.goal{background:var(--ink);color:var(--bg)}
+.mdl .who{display:flex;align-items:center;font-size:21px;font-weight:500}
+.mdl .c{position:relative;display:flex;align-items:center;justify-content:center;margin:9px 0;height:78px;border-radius:12px;background:var(--surface);font-size:23px;font-weight:500}
+.mdl .c:not(.out)::after{content:"→";position:absolute;right:-22px;top:50%;transform:translateY(-50%);font-size:18px;font-weight:300;color:var(--ink-3)}
+.mdl .c.in{margin:0;height:96px;border-radius:0;background:color-mix(in srgb,var(--brand) 45%,var(--surface));color:#0B0C0A}
+.mdl .c.out{margin:0;height:96px;border-radius:0;background:var(--surface-2)}
+.mdl .ft{font-size:16px;font-weight:300;line-height:1.45;color:var(--ink-2);padding:12px 4px 0;text-align:center}
+.mdl .grid .ft:nth-last-child(4){background:none}
+.els{counter-reset:e}
+.els li{counter-increment:e;position:relative;padding:11px 0 11px 44px;border-top:1px solid var(--line);font-size:18px;font-weight:300;line-height:1.45;color:var(--ink-2)}
+.els li:first-child{border-top:0;padding-top:0}
+.els li::before{content:counter(e);position:absolute;left:0;top:11px;font-size:15px;font-weight:500;color:var(--accent-ink)}
+.els li:first-child::before{top:2px}
+.els li b{display:block;font-size:23px;font-weight:500;color:var(--ink)}
+.els li b em{font-style:normal;font-size:14px;font-weight:500;color:var(--ink-3);border:1.5px solid var(--line-2);border-radius:999px;padding:1px 10px;margin-left:10px;vertical-align:3px}
+
+.ba{display:grid;grid-template-columns:1fr 250px 1fr;column-gap:14px;align-items:stretch}
+.panel{background:var(--surface);border-radius:18px;padding:20px 22px 20px}
+.panel>h3{font-size:17px;font-weight:500;color:var(--ink-3)}
+.ppl{display:grid;grid-template-columns:repeat(3,1fr);column-gap:10px;margin-top:14px}
+.pp .who{font-size:21px;font-weight:500}
+.pp .who small{display:block;font-size:15px;font-weight:300;color:var(--ink-3)}
+.pp .chips{display:flex;gap:5px;margin:2px 0 10px;height:36px}
+.pp .rl{font-size:13px;color:var(--ink-3);margin-top:8px}
+.chip{height:36px;border-radius:9px;padding:0 11px;font-size:16px;font-weight:500;color:#0B0C0A;display:flex;align-items:center;white-space:nowrap}
+.chip.s{padding:0 7px;font-size:14px;font-weight:400}
+.c-a{background:var(--brand)}.c-b{background:var(--blue)}.c-c{background:var(--amber)}
+.pp .next{font-size:17px;line-height:1.4;border-radius:9px;padding:9px 12px;margin-top:2px;background:var(--surface-2);color:var(--ink-2);min-height:66px}
+.panel .res{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:19px;font-weight:300;color:var(--ink-2)}
+.panel .res b{font-size:13px;font-weight:400;color:var(--ink-3);margin-right:12px}
+.panel .res.ok{color:var(--ink);font-weight:500}
+.chain{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:22px;font-size:17px;color:var(--ink-3)}
+.chain span{font-size:20px;font-weight:500;color:var(--ink);border:1.5px solid var(--line-2);border-radius:999px;padding:5px 22px}
+.chain i{font-style:normal}
+.chain i::after{content:" →"}
+.pp .next.ok{background:var(--brand);color:#0B0C0A;font-weight:500}
+.ba .mid{position:relative;display:flex;flex-direction:column;justify-content:center;gap:8px;font-size:15px;font-weight:300;line-height:1.4;color:var(--ink-2)}
+.ba .mid .mt{font-size:17px;font-weight:500;color:var(--accent-ink);text-align:center;margin-bottom:2px}
+.ba .mid .k{border:1.5px solid var(--line-2);border-radius:12px;padding:9px 14px}
+.ba .mid .k b{display:block;font-size:22px;font-weight:500;line-height:1.3;color:var(--ink)}
+.ba .mid .k.hl{background:var(--brand);border-color:var(--brand);color:#0B0C0A}
+.ba .mid .k.hl b{color:#0B0C0A}
+.ba .mid .ar{text-align:center}
+.ba .mid b.ar{font-size:34px;font-weight:300;line-height:1;color:var(--accent-ink)}
+.lg{display:flex;gap:22px;margin-top:14px;font-size:15px;color:var(--ink-3)}
+.lg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.eg3{display:grid;grid-template-columns:auto auto auto auto;justify-content:space-between;column-gap:18px;align-items:baseline;margin-top:18px;padding:14px 22px;background:var(--surface-2);border-radius:14px;font-size:18px;font-weight:300;color:var(--ink)}
+.eg3 .l{font-size:15px;color:var(--ink-3)}
+.eg3 b{font-size:15px;font-weight:500;color:var(--accent-ink);margin-right:8px}
+.eg3 span{white-space:nowrap}
+.dir2{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;margin-top:14px}
+.dir2>div{background:var(--surface-2);border-radius:14px;padding:12px 20px;font-size:18px;font-weight:300;line-height:1.5;color:var(--ink-2)}
+.dir2 b{font-size:20px;font-weight:500;color:var(--ink);margin-right:12px}
+.dir2 em{display:block;font-style:normal;color:var(--ink);margin-top:2px}
+.claim{margin-top:20px;font-size:29px;font-weight:400;line-height:1.5;letter-spacing:-.005em;max-width:1340px}
+.claim em{font-style:normal;background:linear-gradient(transparent 62%,color-mix(in srgb,var(--brand) 70%,transparent) 62%)}
+
+.wrapbar{position:relative;height:30px;border:2px solid var(--line-2);border-bottom:0;border-radius:12px 12px 0 0;margin:0 40px}
+.wrapbar span{position:absolute;left:50%;top:-16px;transform:translateX(-50%);background:var(--bg);padding:0 16px;font-size:19px;font-weight:500;color:var(--ink-2)}
+.t3{display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px}
+.t3>div{background:var(--surface);border-radius:18px;padding:22px 26px 24px}
+.t3 .when{font-size:15px;font-weight:500;color:var(--accent-ink)}
+.t3 h3{font-size:40px;font-weight:500;line-height:1.2;margin:2px 0 4px}
+.t3 .what{font-size:20px;font-weight:300;color:var(--ink-2)}
+.t3 .eg{margin-top:16px;background:var(--surface-2);border-radius:12px;padding:14px 16px;font-size:20px;line-height:1.5;min-height:88px}
+.t3 .so{margin-top:16px;font-size:19px;font-weight:300;color:var(--ink-2);line-height:1.45}
+.t3 .so b{display:block;font-size:15px;font-weight:500;color:var(--ink-3)}
+.axis{position:relative;display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px;margin-top:20px;border-top:2px solid var(--line-2)}
+.axis::after{content:"";position:absolute;right:-2px;top:-8px;border:7px solid transparent;border-left:11px solid var(--line-2);border-right:0}
+.axis span{position:relative;padding-top:12px;font-size:17px;color:var(--ink-3);text-align:center}
+.axis span::before{content:"";position:absolute;left:50%;top:-8px;margin-left:-7px;width:14px;height:14px;border-radius:50%;background:var(--focus)}
+.measure{margin-top:26px;font-size:26px;line-height:1.5}
+.measure b{font-weight:500}
+
+.trust{display:grid;grid-template-columns:1fr 520px;column-gap:40px;align-items:start}
+.paths .ph,.paths .pr{display:grid;grid-template-columns:290px 1fr 120px;column-gap:20px;align-items:center}
+.paths .ph{font-size:15px;color:var(--ink-3);padding-bottom:8px}
+.paths .pr{border-top:1px solid var(--line);padding:17px 0;font-size:20px;font-weight:300;line-height:1.45;color:var(--ink-2)}
+.paths .pr b{font-size:23px;font-weight:500;color:var(--ink);line-height:1.35}
+.paths .pr em{font-style:normal;font-size:18px;font-weight:500;border-radius:999px;padding:7px 0;text-align:center;color:#0B0C0A}
+.paths .up{background:var(--brand)}.paths .keep{background:var(--blue)}.paths .down{background:#F0A12E}
+.paths .fin{border-top:1px solid var(--line);padding-top:16px;font-size:20px;font-weight:300;line-height:1.55;color:var(--ink-2)}
+.chart{background:var(--surface);border-radius:18px;padding:22px 22px 16px}
+.chart svg{display:block;width:100%;height:auto}
+.chart p{font-size:15px;color:var(--ink-3);text-align:center;margin-top:4px}
+
+.tr5{display:grid;grid-template-columns:repeat(5,1fr);column-gap:40px}
+.tr5>div{position:relative;background:var(--surface);border-radius:16px;padding:16px 20px;min-height:112px;font-size:18px;font-weight:300;line-height:1.45;color:var(--ink-2)}
+.tr5 b{display:block;font-size:27px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.tr5>div:not(:last-child)::after{content:"→";position:absolute;right:-31px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--ink-3)}
+.tr5 .hl{background:var(--brand);color:#0B0C0A}.tr5 .hl b{color:#0B0C0A}
+.tr5 .dk{background:var(--ink);color:var(--bg)}.tr5 .dk b{color:var(--bg)}
+.back.tb{margin:12px 10% 0 20%;height:36px}
+.back.tb::before{left:auto;right:-8px}
+.back.tb::after{content:"";position:absolute;left:-8px;top:-4px;border:7px solid transparent;border-bottom:11px solid var(--line-2);border-top:0}
+.back.tb::before{display:none}
+.tcols{display:grid;grid-template-columns:1fr 1.15fr;column-gap:56px;margin-top:38px}
+.tcols h3{font-size:16px;font-weight:500;color:var(--accent-ink);padding-bottom:10px}
+.tcols .pr{display:grid;grid-template-columns:1fr 120px;align-items:center;border-top:1px solid var(--line);padding:12px 0}
+.tcols .pr b{font-size:22px;font-weight:500}
+.tcols .pr em{font-style:normal;font-size:17px;font-weight:500;border-radius:999px;padding:6px 0;text-align:center;color:#0B0C0A}
+.tcols .up{background:var(--brand)}.tcols .keep{background:var(--blue)}.tcols .down{background:#F0A12E}
+.tcols .nt{border-top:1px solid var(--line);padding-top:12px;font-size:17px;font-weight:300;line-height:1.5;color:var(--ink-3)}
+.tcols .pr2{display:grid;grid-template-columns:150px 1fr;column-gap:16px;align-items:baseline;border-top:1px solid var(--line);padding:14px 0;font-size:20px;font-weight:300;line-height:1.45;color:var(--ink-2)}
+.tcols .pr2 b{font-size:22px;font-weight:500;color:var(--ink)}
+
+.inf{display:grid;grid-template-columns:repeat(4,1fr);column-gap:16px;align-items:stretch}
+.inf>div{position:relative;background:var(--surface);border-radius:18px;padding:0 24px 22px;display:flex;flex-direction:column}
+.inf .from{margin:0 -24px 22px;padding:12px 24px;border-radius:18px 18px 0 0;background:color-mix(in srgb,var(--brand) 38%,var(--surface));font-size:16px;font-weight:500;color:#0B0C0A;line-height:1.4;min-height:68px;display:flex;align-items:center}
+.inf h3{font-size:27px;font-weight:500;line-height:1.3;margin:12px 0 10px}
+.inf p{font-size:19px;font-weight:300;line-height:1.55;color:var(--ink-2)}
+.inf .to{margin-top:auto;padding-top:18px;font-size:15px;font-weight:500;color:var(--accent-ink)}
+
+.tl{display:grid;grid-template-columns:repeat(5,1fr);border-top:2px solid var(--line-2);margin-top:64px}
+.tl>div{position:relative;padding:30px 28px 0 0;font-size:21px;font-weight:300;line-height:1.5;color:var(--ink-2)}
+.tl>div::before{content:"";position:absolute;left:0;top:-8px;width:14px;height:14px;border-radius:50%;background:var(--focus)}
+.tl b{display:block;font-size:30px;font-weight:500;color:var(--ink);margin-bottom:6px}
+.tl span{display:block;font-size:17px;color:var(--ink-3);margin-top:8px}
+
+.q4{display:grid;grid-template-columns:repeat(4,1fr);column-gap:6px}
+.q4 .seg{padding:20px 22px;background:color-mix(in srgb,var(--brand) 30%,var(--surface));min-height:150px}
+.q4 .seg:first-child{border-radius:18px 0 0 18px}.q4 .seg:nth-child(4){border-radius:0 18px 18px 0}
+.q4 .seg i{font-style:normal;font-size:15px;font-weight:500;color:var(--accent-ink)}
+.q4 .seg b{display:block;font-size:26px;font-weight:500;margin:2px 0 8px}
+.q4 .seg p{font-size:19px;font-weight:300;line-height:1.45;color:var(--ink-2)}
+.q4 .link{height:34px;position:relative}
+.q4 .link::before{content:"";position:absolute;left:50%;top:6px;bottom:6px;border-left:2px solid var(--line-2)}
+.q4 .src{background:var(--surface);border-radius:16px;padding:18px 22px;margin:0 5px;font-size:19px;font-weight:300;line-height:1.5;color:var(--ink-2)}
+.q4 .src b{display:block;font-size:22px;font-weight:500;color:var(--ink)}
+.q4 .src small{display:block;font-size:15px;color:var(--ink-3);margin-bottom:6px}
+.q4 .src b+small+span+b{margin-top:14px}
+.cap{font-size:17px;color:var(--ink-3);margin-bottom:10px}
+
+.pyr{display:grid;grid-template-columns:560px 1fr;column-gap:44px;row-gap:10px;align-items:stretch}
+.pyr .lv{display:flex;justify-content:center}
+.pyr .lv>div{border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:112px;font-size:24px;font-weight:500;background:var(--surface);padding:8px 12px}
+.pyr .lv small{font-size:16px;font-weight:300;color:var(--ink-3)}
+.pyr .lv .w0{width:100%;background:none;border:2px dashed var(--line-2);font-size:20px;font-weight:400;color:var(--ink-2);min-height:76px}
+.pyr .lv .w1{width:38%;background:var(--brand);color:#0B0C0A}
+.pyr .lv .w1 small{color:#0B0C0A;opacity:.7}
+.pyr .lv .w2{width:70%;background:color-mix(in srgb,var(--brand) 38%,var(--surface))}
+.pyr .lv .w3{width:100%}
+.pyr .tx{border-top:1px solid var(--line);padding-top:12px;font-size:21px;font-weight:300;line-height:1.5;color:var(--ink-2);display:grid;grid-template-columns:270px 1fr;column-gap:20px;align-content:center}
+.pyr .tx b{font-size:24px;font-weight:500;color:var(--ink)}
+.pyr .tx b small{display:block;font-size:15px;font-weight:400;color:var(--ink-3)}
+
+.loop{display:grid;grid-template-columns:repeat(4,1fr);column-gap:44px}
+.loop>div{position:relative;background:var(--surface);border-radius:18px;padding:24px 26px;min-height:300px}
+.loop>div:not(:last-child)::after{content:"→";position:absolute;right:-33px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--ink-3)}
+.loop i{font-style:normal;font-size:15px;font-weight:500;color:var(--accent-ink)}
+.loop h3{font-size:30px;font-weight:500;line-height:1.25;margin:4px 0 14px}
+.loop b{display:block;font-size:20px;font-weight:500}
+.loop p{font-size:19px;font-weight:300;line-height:1.5;color:var(--ink-2);margin-top:6px}
+.back{position:relative;height:40px;margin:14px 12.5% 0;border:2px solid var(--line-2);border-top:0;border-radius:0 0 14px 14px}
+.back::before{content:"";position:absolute;left:-8px;top:-4px;border:7px solid transparent;border-bottom:11px solid var(--line-2);border-top:0}
+.back span{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);background:var(--bg);padding:0 16px;font-size:18px;color:var(--ink-2);white-space:nowrap}
+
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px}
+.cards3>div{background:var(--surface);border-radius:18px;padding:26px 32px 30px}
+.cards3 svg{display:block;width:100%;height:150px;margin-bottom:14px}
+.cards3 i{font-style:normal;font-size:15px;font-weight:500;color:var(--accent-ink)}
+.cards3 h3{font-size:30px;font-weight:500;line-height:1.3;margin:6px 0 12px}
+.cards3 p{font-size:21px;font-weight:300;line-height:1.55;color:var(--ink-2)}
+.g-ink{fill:var(--ink)}.g-mute{fill:var(--line-2)}.g-brand{fill:var(--focus)}
+.g-line{stroke:var(--line-2);stroke-width:2;fill:none}.g-box{fill:var(--surface-2);stroke:var(--line-2);stroke-width:2}
+.g-t{font-size:15px;fill:var(--ink-3);font-family:var(--font)}
+
+.inc{display:grid;grid-template-columns:1.35fr 1fr;column-gap:16px}
+.inc>div{background:var(--surface);border-radius:18px;padding:26px 32px 30px}
+.stats{display:flex;gap:48px}
+.stats b{display:block;font-size:60px;font-weight:400;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats b small{font-size:22px;font-weight:400;margin-left:4px;letter-spacing:0}
+.stats span{display:block;font-size:17px;color:var(--ink-2);margin-top:8px}
+.qh{margin-top:30px;font-size:17px;font-weight:500;color:var(--ink-2);display:flex;justify-content:space-between}
+.qh em{font-style:normal;font-weight:300;color:var(--ink-3)}
+.queue{display:flex;gap:4px;margin-top:10px;align-items:center}
+.queue i{flex:1;height:52px;border-radius:6px;background:var(--line-2)}
+.queue i.a{background:var(--focus)}
+.queue::after{content:"→ sent";font-size:16px;color:var(--ink-3);margin-left:10px;white-space:nowrap}
+.inc .lg{margin-top:12px}
+.inc h3{font-size:16px;font-weight:500;color:var(--accent-ink);margin-bottom:8px}
+.inc li{font-size:22px;font-weight:300;line-height:1.5;color:var(--ink-2);padding:15px 0;border-top:1px solid var(--line)}
+.inc li:first-child{border-top:0;padding-top:0}
+.inc li b{font-weight:500;color:var(--ink);display:inline-block;width:130px}
+
+.anat{display:grid;grid-template-columns:250px 1fr 230px;column-gap:22px;row-gap:12px;align-items:stretch}
+.anat .lab{text-align:right;padding-top:12px;font-size:22px;font-weight:500}
+.anat .lab small{display:block;font-size:15px;font-weight:400;color:var(--ink-3)}
+.anat .part{background:var(--surface);border-radius:14px;padding:15px 22px;font-size:21px;font-weight:300;line-height:1.55;color:var(--ink)}
+.anat .part.p1{background:var(--brand);color:#0B0C0A;font-weight:400}
+.anat .car{display:flex;flex-wrap:wrap;gap:6px;align-content:center}
+.anat .car span{font-size:16px;font-weight:500;border-radius:999px;padding:5px 14px;border:1.5px solid var(--line-2);color:var(--ink-2)}
+.anat .hd{font-size:15px;color:var(--ink-3)}
+
+.two{display:grid;grid-template-columns:500px 1fr;column-gap:48px;align-items:start}
+.pts li{position:relative;padding:24px 0 24px 58px;border-top:1px solid var(--line);font-size:21px;font-weight:300;line-height:1.5;color:var(--ink-2)}
+.pts li:first-child{border-top:0;padding-top:4px}
+.pts li b{display:block;font-size:27px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.nb{font-style:normal;width:38px;height:38px;border-radius:50%;background:var(--brand);color:#0B0C0A;font-size:18px;font-weight:500;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.pts li .nb{position:absolute;left:0;top:26px}
+.pts li:first-child .nb{top:6px}
+.msg{background:var(--surface);border-radius:18px;padding:26px 32px 12px}
+.msg .hd{display:flex;align-items:center;gap:10px;font-size:17px;color:var(--ink-3);padding-bottom:14px;border-bottom:1px solid var(--line)}
+.msg .ctx{font-size:20px;color:var(--ink-3);padding:14px 0 0 56px}
+.msg .row{display:grid;grid-template-columns:38px 1fr;column-gap:18px;padding:18px 0;border-top:1px dashed var(--line-2);font-size:23px;font-weight:300;line-height:1.6;white-space:pre-line}
+.msg .hd+.row,.msg .ctx+.row{border-top:0}
+.msg .row .nb{margin-top:0}
+
+.s3{display:grid;grid-template-columns:repeat(3,1fr);column-gap:16px;align-items:stretch}
+.sc{background:var(--surface);border-radius:18px;padding:22px 26px 10px}
+.sc h3{font-size:30px;font-weight:500;line-height:1.2}
+.sc .cl{font-size:19px;font-weight:500;color:var(--accent-ink);margin-top:4px}
+.sc .cx{font-size:15px;color:var(--ink-3);margin-top:10px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.sc .rw{display:grid;grid-template-columns:34px 1fr;column-gap:14px;padding:14px 0;border-top:1px dashed var(--line-2);font-size:19px;font-weight:300;line-height:1.5;color:var(--ink)}
+.sc .cx+.rw{border-top:0}
+.sc .rw .nb{width:34px;height:34px;font-size:16px}
+.sc .rw b{display:block;font-size:15px;font-weight:500;color:var(--ink-3);margin-bottom:2px}
+
+.checks{counter-reset:c}
+.checks li{counter-increment:c;position:relative;padding:22px 0 22px 64px;border-top:1px solid var(--line);font-size:27px;font-weight:300;line-height:1.45;color:var(--ink)}
+.checks li:first-child{border-top:0}
+.checks li::before{content:counter(c);position:absolute;left:0;top:20px;width:40px;height:40px;border-radius:50%;background:var(--brand);color:#0B0C0A;font-size:20px;font-weight:500;display:flex;align-items:center;justify-content:center}
+.checks small{display:block;font-size:20px;color:var(--ink-3);margin-top:2px}
+.checks em{font-style:normal;float:right;font-size:16px;font-weight:500;color:var(--ink-2);border:1.5px solid var(--line-2);border-radius:999px;padding:4px 14px;margin-top:4px}
+
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:16px;font-weight:400;color:var(--ink-3);padding:0 24px 10px 0}
+.tbl td{vertical-align:top;border-top:1px solid var(--line);padding:20px 24px 20px 0;font-size:23px;font-weight:300;line-height:1.5;color:var(--ink-2)}
+.tbl td.k{font-size:25px;font-weight:500;color:var(--ink);white-space:nowrap}
+
+.side{display:none}
+.deck .side{display:block;position:fixed;left:0;top:0;bottom:0;width:208px;overflow:auto;padding:28px 10px 28px 20px;background:var(--bg);border-right:1px solid var(--line);z-index:5}
+.side h4{font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--ink-3);margin:18px 0 6px 8px}
+.side h4:first-child{margin-top:0}
+.side button{display:flex;gap:10px;width:100%;text-align:left;border:0;background:none;font:inherit;font-size:14px;line-height:1.3;color:var(--ink-2);padding:5px 8px;border-radius:7px;cursor:pointer}
+.side button i{font-style:normal;width:18px;flex:none;text-align:right;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.side button:hover{background:var(--surface)}
+.side button.now{background:var(--focus);color:#0B0C0A;font-weight:500}
+.side button.now i{color:#0B0C0A}
+.pager{display:none}
+@media (max-width:900px){
+  .deck .side{display:none}
+  .deck .pager{display:flex;position:fixed;left:50%;bottom:20px;transform:translateX(-50%);gap:10px;align-items:center;z-index:6;font-size:14px;color:var(--ink-3)}
+  .pager button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-2);background:var(--bg);color:var(--ink-2);font-size:18px}
+}
+
+.topbar{position:fixed;right:18px;top:12px;z-index:7;display:flex;gap:14px;font-size:13px}
+.topbar a{color:var(--ink-3);text-decoration:none}
+.topbar a:hover{color:var(--ink)}
+@media (max-width:900px){.topbar{top:8px;right:12px}}
+
+.h-lg{font-size:40px;line-height:1.2}
+.cover .h-xl{font-size:96px}
+.cover .h-xl .pre{font-size:38px}
+.cover .cr{font-size:20px}
+.cover .cb h3{font-size:28px}.cover .cb p:last-child{font-size:17px}
+.sub{font-size:21px}
+.claim{font-size:26px}
+.ax li{font-size:19px;padding:18px 0 18px 58px}.ax li b{font-size:24px}
+.els li{font-size:16px;padding:9px 0 9px 44px}.els li b{font-size:21px}
+.mdl .who{font-size:18px}.mdl .c{font-size:20px}.mdl .hd{font-size:14px}.mdl .ft{font-size:14px}
+.mdl .grid{grid-template-columns:140px 1.25fr 1fr 1fr 1.25fr;column-gap:24px}
+.pp .who{font-size:18px}.pp .next{font-size:15px;min-height:78px}.chip{font-size:14px;padding:0 9px}.chip.s{font-size:12px;padding:0 6px}
+.panel>h3{font-size:15px}.panel .res{font-size:16px}
+.ba .mid .k b{font-size:20px}.ba .mid{font-size:14px}
+.dir2>div{font-size:16px}.dir2 b{font-size:18px}
+.tr5>div{font-size:16px}.tr5 b{font-size:24px}
+.tcols .pr b{font-size:19px}.tcols .pr{grid-template-columns:1fr 110px}.tcols .pr2{font-size:18px;grid-template-columns:170px 1fr}.tcols .pr2 b{font-size:19px}.tcols .nt{font-size:16px}
+.inf h3{font-size:23px}.inf p{font-size:17px}.inf .from{font-size:14px}.inf .to{font-size:14px}
+.tl>div{font-size:18px}.tl b{font-size:25px}
+.q4 .seg b{font-size:21px}.q4 .seg p{font-size:17px}.q4 .src{font-size:16px}.q4 .src b{font-size:19px}
+.pyr .lv>div{font-size:21px}.pyr .lv .w0{font-size:17px}.pyr .tx{font-size:18px;grid-template-columns:300px 1fr}.pyr .tx b{font-size:21px}
+.loop h3{font-size:25px}.loop b{font-size:18px}.loop p{font-size:17px}
+.cards3 h3{font-size:25px}.cards3 p{font-size:19px}
+.stats b{font-size:54px}.stats span{font-size:15px}.qh{font-size:15px}.inc li{font-size:19px}.inc li b{width:170px}.inc .lg{font-size:13px}
+.anat{grid-template-columns:230px 1fr 260px}.anat .lab{font-size:19px}.anat .part{font-size:18px}.anat .car span{font-size:14px}
+.sc h3{font-size:26px}.sc .cl{font-size:16px}.sc .cx{font-size:14px}.sc .rw{font-size:16px;padding:11px 0}.sc .rw b{font-size:14px}
+.tbl td{font-size:20px}.tbl td.k{font-size:22px}
+.foot{font-size:16px}
+.ring .rn{font-size:21px}.ring .rs{font-size:12px}
+.side button{font-size:13px}
+
+.h-lg{font-size:38px}
+.cover .h-xl{font-size:88px}
+.els li{font-size:15px;padding:7px 0 7px 44px}.els li b{font-size:20px}
+.pp .next{font-size:14px;min-height:62px;padding:7px 10px}
+.claim{font-size:23px;margin-top:14px}
+.dir2{margin-top:10px}.dir2>div{padding:9px 16px;font-size:15px}.dir2 b{font-size:17px}
+.sc{padding:18px 22px 6px}.sc .rw{font-size:15px;padding:9px 0}.sc h3{font-size:24px}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="../../">Studies</a><a href="../">中文</a></div>
+<main id="deck">
+
+<section class="slide dark cover" aria-label="Cover">
+  <div class="pad">
+    <h1 class="h-xl"><span class="pre">Based on classic texts from open-source communities</span>A Guide to Collaborative Communication</h1>
+    <div class="cvt">
+      <div class="cr"><span>What we stand for</span>Every message lets the reader act as soon as they finish it: state the conclusion, the basis, the next step with a date, and who needs to do what</div>
+      <div class="cl"><i></i></div>
+      <div class="cb">
+        <div class="b1"><p class="pt">Part 1</p><h3>A model of collaboration</h3><p>Goals, information, decisions, communication, attention and trust, and four corollaries that follow</p></div>
+        <div class="b2"><p class="pt">Part 2</p><h3>Classic texts</h3><p>A dozen texts left by open-source communities and remote teams, and what each one argues</p></div>
+        <div class="b3"><p class="pt">Part 3</p><h3>What we do</h3><p>One case, the four parts of a message, six common situations</p></div>
+      </div>
+    </div>
+    <div class="facts">
+      <div><b>XingHua</b><span>Translated from the Chinese edition</span></div>
+      <div><b>16 slides</b><span>All examples are fictional</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="One person’s loop">
+  <div class="pad">
+    <p class="eyebrow">Part 1 · A model of collaboration</p>
+    <h2 class="h-lg">Start with one person: under a goal, information drives decisions, and decisions drive results</h2>
+    <div class="body one" style="margin-top:20px">
+      <svg class="ring" viewBox="0 0 520 420" aria-label="The loop of information, decision, action and result">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink-3)"/></marker></defs>
+        <g fill="none" stroke="var(--ink-3)" stroke-width="2.5" marker-end="url(#ah)">
+          <path d="M323.4 74.1A150 150 0 0 1 395.9 146.6"/><path d="M395.9 273.4A150 150 0 0 1 323.4 345.9"/>
+          <path d="M196.6 345.9A150 150 0 0 1 124.1 273.4"/><path d="M124.1 146.6A150 150 0 0 1 196.6 74.1"/>
+        </g>
+        <circle cx="260" cy="60" r="58" fill="var(--brand)"/><text x="260" y="58" class="rn" fill="#0B0C0A">Information</text><text x="260" y="82" class="rs" fill="#0B0C0A">what I know</text>
+        <circle cx="440" cy="210" r="58" fill="var(--surface)" stroke="var(--line-2)" stroke-width="2"/><text x="440" y="208" class="rn">Decision</text><text x="440" y="232" class="rs">which option</text>
+        <circle cx="260" cy="360" r="58" fill="var(--surface)" stroke="var(--line-2)" stroke-width="2"/><text x="260" y="358" class="rn">Action</text><text x="260" y="382" class="rs">do it</text>
+        <circle cx="80" cy="210" r="58" fill="var(--surface)" stroke="var(--line-2)" stroke-width="2"/><text x="80" y="208" class="rn">Result</text><text x="80" y="232" class="rs">the status changes</text>
+        <circle cx="260" cy="210" r="54" fill="var(--ink)"/><text x="260" y="208" class="rn" style="fill:var(--bg)">Goal</text><text x="260" y="232" class="rs" style="fill:var(--bg)">what counts as good</text><path d="M318 210H374" stroke="var(--ink-3)" stroke-width="2.5" stroke-dasharray="4 5" fill="none" marker-end="url(#ah)"/>
+      </svg>
+      <ol class="ax">
+        <li><i class="nb">1</i><b>A decision depends on the goal and the information</b>The goal defines what counts as good; information determines how well you can choose. Everyone picks what looks best to them, given their own goal and the information they have.</li>
+        <li><i class="nb">2</i><b>Results are uncertain</b>A good decision does not guarantee a good result every time, but over the long run the quality of decisions determines the quality of results.</li>
+        <li><i class="nb">3</i><b>Results become new information</b>After one round the status has changed, and the next decision starts from the new status. The faster the loop turns, the faster you correct course.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Many people">
+  <div class="pad">
+    <p class="eyebrow">Part 1 · A model of collaboration</p>
+    <h2 class="h-lg">Collaboration is many loops linked together: goals must align, information is dispersed, attention is limited</h2>
+    <div class="body mdl" style="margin-top:26px">
+      <div class="grid">
+        <span></span><span class="hd on-brand">Communication: information flows between people</span><span class="hd"></span><span class="hd"></span><span class="hd goal">Together: the shared goal</span>
+        <span class="who">Writes the plan</span><span class="c in">Information</span><span class="c">Decision</span><span class="c">Action</span><span class="c out">Result</span>
+        <span class="who">Builds it</span><span class="c in">Information</span><span class="c">Decision</span><span class="c">Action</span><span class="c out">Result</span>
+        <span class="who">Talks to users</span><span class="c in">Information</span><span class="c">Decision</span><span class="c">Action</span><span class="c out">Result</span>
+        <span></span><span class="ft">Each person holds only their own part; my decision needs information that you hold</span><span class="ft"></span><span class="ft"></span><span class="ft">My result changes your status; the parts add up to the overall result</span>
+      </div>
+      <ol class="els">
+        <li><b>Goal</b>The result everyone wants together. Only with aligned goals do the parts decide in the same direction</li>
+        <li><b>Information and decisions</b>Information is dispersed across people; each decides on what they hold</li>
+        <li><b>Communication</b>The channel through which information flows between people</li>
+        <li><b>Attention<em>constraint</em></b>Writing and reading both cost attention, and everyone has only so much per day</li>
+        <li><b>Trust<em>state</em></b>Built up over long collaboration; decides whether received information can be used directly</li>
+      </ol>
+    </div>
+    <p class="foot"><b>One proposition follows:</b>Each decision is reasonable given that person's goal and information, yet the decisions may not fit together. For the overall result to approach the optimum, goals must align, information must arrive, and it should cost as little attention as possible.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Communication">
+  <div class="pad">
+    <p class="eyebrow">Part 1 · A model of collaboration</p>
+    <h2 class="h-lg">Communication runs in two directions, giving and asking, and both carry status, judgment and expectation</h2>
+    <div class="body" style="margin-top:26px">
+      <div class="ba">
+        <div class="panel">
+          <h3>Before: each person holds only the information of their own part</h3>
+          <div class="ppl">
+            <div class="pp"><p class="who">Writes the plan</p><p class="rl">Information</p><div class="chips"><span class="chip c-a">Plan</span></div><p class="rl">Decision</p><p class="next">Sets scope on an assumed timeline</p></div>
+            <div class="pp"><p class="who">Builds it</p><p class="rl">Information</p><div class="chips"><span class="chip c-b">Build</span></div><p class="rl">Decision</p><p class="next">Schedules on their own reading of the scope</p></div>
+            <div class="pp"><p class="who">Talks to users</p><p class="rl">Information</p><div class="chips"><span class="chip c-c">Users</span></div><p class="rl">Decision</p><p class="next">Answers users with an estimated date</p></div>
+          </div>
+          <p class="res"><b>Result</b>Each decision is reasonable on its own information; together they do not fit</p>
+        </div>
+        <div class="mid"><p class="mt">Three kinds of information</p><div class="k"><b>Status</b>facts that have already happened</div><div class="k"><b>Judgment</b>my interpretation and conclusion</div><div class="k hl"><b>Expectation</b>who does what next, by when, and the likely result</div><b class="ar">→</b></div>
+        <div class="panel">
+          <h3>After: each gains the information relevant to their own decision</h3>
+          <div class="ppl">
+            <div class="pp"><p class="who">Writes the plan</p><p class="rl">Information</p><div class="chips"><span class="chip c-a">Plan</span><span class="chip s c-b">Build</span><span class="chip s c-c">Users</span></div><p class="rl">Decision</p><p class="next ok">Sets scope on the real timeline</p></div>
+            <div class="pp"><p class="who">Builds it</p><p class="rl">Information</p><div class="chips"><span class="chip c-b">Build</span><span class="chip s c-a">Plan</span></div><p class="rl">Decision</p><p class="next ok">Schedules on the confirmed scope</p></div>
+            <div class="pp"><p class="who">Talks to users</p><p class="rl">Information</p><div class="chips"><span class="chip c-c">Users</span><span class="chip s c-a">Plan</span><span class="chip s c-b">Build</span></div><p class="rl">Decision</p><p class="next ok">Answers users with the confirmed date</p></div>
+          </div>
+          <p class="res ok"><b>Result</b>Decisions fit together; the overall result is closer to the optimum</p>
+        </div>
+      </div>
+      <div class="dir2">
+        <div><b>Give</b><span>send over the information the other person needs to decide</span><em>“Six of the eight design pages are done. I will post the full set in the channel by Friday 18:00.”</em></div>
+        <div><b>Ask</b><span>request the information my decision lacks, or ask the other person to act</span><em>“Monday’s review needs the full set. Can you deliver by Friday?”</em></div>
+      </div>
+      <p class="claim">The purpose of communication: with as little attention as possible, give everyone involved <em>more complete information and more consistent expectations</em>, so that each decides on sufficient information and the overall result moves toward the optimum.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Trust">
+  <div class="pad">
+    <p class="eyebrow">Part 1 · A model of collaboration</p>
+    <h2 class="h-lg">Trust is what accumulates as expectations are verified by results; it decides whether information can be used directly</h2>
+    <div class="body" style="margin-top:26px">
+      <div class="tr5">
+        <div class="hl"><b>Expectation</b>the other person tells me what will happen next</div>
+        <div><b>Decision</b>I plan my own work on that expectation</div>
+        <div><b>Result</b>what actually happened when it came due</div>
+        <div><b>Compare</b>does the result match the expectation?</div>
+        <div class="dk"><b>Trust</b>how predictable the other person is to me</div>
+      </div>
+      <div class="back tb"><span>Carried into the next round: can I decide directly on the expectations this person gives me?</span></div>
+      <div class="tcols">
+        <div>
+          <h3>How trust updates each round</h3>
+          <div class="pr"><b>Delivered on time</b><em class="up">↑ rises</em></div>
+          <div class="pr"><b>Things changed, expectation updated before the date</b><em class="keep">→ holds</em></div>
+          <div class="pr"><b>The date passes in silence: an expectation gap</b><em class="down">↓ falls</em></div>
+          <p class="nt">As in markets, the expectation gap often matters most. When things change, update the expectation before the date, much as a listed company revises its guidance ahead of results.</p>
+        </div>
+        <div>
+          <h3>With higher trust, what changes elsewhere in the model</h3>
+          <div class="pr2"><b>Information</b><span>The expectations you receive can be used as a basis for decisions without re-checking</span></div>
+          <div class="pr2"><b>Communication</b><span>The same decision needs less communication, saving attention on both sides</span></div>
+          <div class="pr2"><b>Decisions and results</b><span>Everyone’s loop turns faster, and the overall result is closer to the optimum</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Four corollaries">
+  <div class="pad">
+    <p class="eyebrow">Part 1 · A model of collaboration</p>
+    <h2 class="h-lg">Four corollaries follow from the model; the texts and practices that come next all derive from them</h2>
+    <div class="body inf" style="margin-top:34px">
+      <div><p class="from">Model: a decision depends on the goal and the information</p><i class="nb">1</i><h3>Give all the information the other person needs to decide</h3><p>Whether giving or asking, state the status, your judgment and the expectation. Whatever is missing, the other person has to fill in alone.</p><p class="to">Part 2: asking　Part 3: four parts</p></div>
+      <div><p class="from">Model: attention is a constraint</p><i class="nb">2</i><h3>Put the conclusion first and say it once</h3><p>The reader can use it after one read, without opening links, digging through history or asking again. The more readers, the more the writing time is worth.</p><p class="to">Part 2: writing clearly　Part 3: giving</p></div>
+      <div><p class="from">Model: information is dispersed, and collaboration has many rounds</p><i class="nb">3</i><h3>Write it down where everyone can see it</h3><p>People who were absent, and people who join later, get the same information when they decide.</p><p class="to">Part 2: moving work forward</p></div>
+      <div><p class="from">Model: trust comes from expectations verified by results</p><i class="nb">4</i><h3>Make expectations specific and update early</h3><p>State the date and scope, then deliver. If things change, update the expectation before the date.</p><p class="to">Part 3: giving</p></div>
+    </div>
+    <p class="foot"><b>The model is now complete:</b>under a shared goal, information drives decisions and decisions drive results; communication moves information between people, under the constraint of attention; trust decides whether that information can be used directly.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Origins">
+  <div class="pad">
+    <p class="eyebrow">Part 2 · Classic texts</p>
+    <h2 class="h-lg">Classic texts from open-source communities and internet companies</h2>
+    <p class="sub">The internet industry’s earliest collaboration happened on mailing lists and forums. The person asking and the person answering did not know each other, lived in different time zones, and the answerer had no obligation to reply. Whether you got help depended on how clearly one message was written. Remote teams later wrote the same practices into their company handbooks.</p>
+    <div class="tl">
+      <div><b>Reporting problems</b>An open-source author writes down how to report a bug so that it gets fixed<span>1999</span></div>
+      <div><b>Asking</b>The hacker community writes down how to ask so that someone answers<span>2001</span></div>
+      <div><b>Conclusion first</b>A habit from consulting and US military writing becomes the norm in tech companies<span>2000s</span></div>
+      <div><b>Postmortems</b>Google publishes its blameless postmortem method<span>2016</span></div>
+      <div><b>Async work</b>Remote teams publish their communication handbooks<span>late 2010s</span></div>
+    </div>
+    <p class="foot">The next three slides introduce the texts under asking, writing clearly, and moving work forward.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Asking">
+  <div class="pad">
+    <p class="eyebrow">Part 2 · Classic texts 1/3</p>
+    <h2 class="h-lg">Asking: five texts together describe the four segments of one question</h2>
+    <div class="body" style="margin-top:30px">
+      <p class="cap">A question that is easy to answer</p>
+      <div class="q4">
+        <div class="seg"><i>Segment 1</i><b>Greeting and question together</b><p>“Hi, one thing to confirm:”</p></div>
+        <div class="seg"><i>Segment 2</i><b>What I am trying to solve</b><p>“I want to …”</p></div>
+        <div class="seg"><i>Segment 3</i><b>What I have checked</b><p>“I read …, and tried …”</p></div>
+        <div class="seg"><i>Segment 4</i><b>My understanding. Is it right?</b><p>“My understanding is …. Is that right?”</p></div>
+        <div class="link"></div><div class="link"></div><div class="link"></div><div class="link"></div>
+        <div class="src"><b><a href="https://nohello.net/en/" target="_blank" rel="noopener">No Hello</a></b><small>nohello.net</small><span>Put the greeting and the question in one message, so the reader can answer on sight.</span><b><a href="https://dontasktoask.com/" target="_blank" rel="noopener">Don’t Ask to Ask</a></b><small>dontasktoask.com</small><span>Just write the question; whoever knows will answer.</span></div>
+        <div class="src"><b><a href="https://xyproblem.info/" target="_blank" rel="noopener">The XY Problem</a></b><small>xyproblem.info</small><span>When you want to solve X, state X together with your attempted approach Y, so others can judge whether Y fits.</span></div>
+        <div class="src"><b><a href="http://www.catb.org/~esr/faqs/smart-questions.html" target="_blank" rel="noopener">How To Ask Questions The Smart Way</a></b><small>Eric S. Raymond</small><span>Search and read the docs first; describe the symptoms and what you have tried; after it is solved, post a note on the outcome.</span></div>
+        <div class="src"><b><a href="https://jvns.ca/blog/good-questions/" target="_blank" rel="noopener">How to ask good questions</a></b><small>Julia Evans</small><span>State your current understanding, then ask “is that right?”; ask questions that facts can answer.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Writing clearly">
+  <div class="pad">
+    <p class="eyebrow">Part 2 · Classic texts 2/3</p>
+    <h2 class="h-lg">Writing clearly: conclusion on top, facts at the base</h2>
+    <div class="body" style="margin-top:30px">
+      <div class="pyr">
+        <div class="lv"><div class="w0">Opening in four sentences: situation → complication → question → answer</div></div>
+        <div class="tx"><b><a href="https://untools.co/situation-complication-question-answer/" target="_blank" rel="noopener">SCQA</a><small>how to open</small></b><span>Four sentences at the start tell the reader why this document exists.</span></div>
+        <div class="lv"><div class="w1">Conclusion<small>first sentence</small></div></div>
+        <div class="tx"><b><a href="https://en.wikipedia.org/wiki/BLUF_(communication)" target="_blank" rel="noopener">BLUF</a><small>Bottom Line Up Front</small></b><span>Put the conclusion and the request in the first sentence; background and argument come after.</span></div>
+        <div class="lv"><div class="w2">Argument 1　Argument 2　Argument 3<small>grouped, one idea per group</small></div></div>
+        <div class="tx"><b><a href="https://untools.co/minto-pyramid/" target="_blank" rel="noopener">The Pyramid Principle</a><small>Barbara Minto</small></b><span>Conclusion first, then grouped arguments, then data. Wherever the reader stops, they leave with a complete idea.</span></div>
+        <div class="lv"><div class="w3">Facts and data<small>what you saw, what you expected, how to reproduce</small></div></div>
+        <div class="tx"><b><a href="https://www.chiark.greenend.org.uk/~sgtatham/bugs.html" target="_blank" rel="noopener">How to Report Bugs Effectively</a><small>Simon Tatham</small></b><span>State what you saw, what you expected and how to reproduce it; keep facts and speculation apart.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Moving forward">
+  <div class="pad">
+    <p class="eyebrow">Part 2 · Classic texts 3/3</p>
+    <h2 class="h-lg">Moving work forward: four texts map to four stages of one piece of work</h2>
+    <div class="body" style="margin-top:34px">
+      <div class="loop">
+        <div><i>Stage 1</i><h3>Write it down, in the open</h3><b><a href="https://handbook.gitlab.com/handbook/communication/" target="_blank" rel="noopener">GitLab Handbook</a></b><p>Write it down and keep it as public as possible, so people who missed the discussion can still follow.</p></div>
+        <div><i>Stage 2</i><h3>Read and reply in your own time</h3><b><a href="https://basecamp.com/guides/how-we-communicate" target="_blank" rel="noopener">Basecamp: How We Communicate</a></b><p>Write complete thoughts in full paragraphs; do not expect immediate replies; meetings are the last resort.</p></div>
+        <div><i>Stage 3</i><h3>Decide and execute</h3><b><a href="https://www.amazon.jobs/content/en/our-workplace/leadership-principles" target="_blank" rel="noopener">Amazon Leadership Principles</a></b><p>Own the work; act first and correct later; voice disagreement, then commit fully once decided.</p></div>
+        <div><i>Stage 4</i><h3>Postmortems</h3><b><a href="https://sre.google/sre-book/postmortem-culture/" target="_blank" rel="noopener">Google SRE：Postmortem Culture</a></b><p>Blameless: impact, causes and action items, each with an owner and a date.</p></div>
+      </div>
+      <div class="back"><span>Action items from the postmortem are written down and enter the next round</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Shared premises">
+  <div class="pad">
+    <p class="eyebrow">Part 2 · Summary</p>
+    <h2 class="h-lg">The three premises these texts share are the model’s corollaries in other words</h2>
+    <div class="body" style="margin-top:40px">
+      <div class="cards3">
+        <div>
+          <svg viewBox="0 0 360 150" aria-hidden="true">
+            <circle cx="50" cy="75" r="16" class="g-brand"/><text x="50" y="118" text-anchor="middle" class="g-t">1 writer</text>
+            <path class="g-line" d="M70 75H150M150 75L250 25M150 75L250 50M150 75H250M150 75L250 100M150 75L250 125"/>
+            <circle cx="262" cy="25" r="9" class="g-ink"/><circle cx="262" cy="50" r="9" class="g-ink"/><circle cx="262" cy="75" r="9" class="g-ink"/><circle cx="262" cy="100" r="9" class="g-ink"/><circle cx="262" cy="125" r="9" class="g-ink"/>
+            <text x="286" y="80" class="g-t">many readers</text>
+          </svg>
+          <i>Premise 1 · Corollary 2</i><h3>The reader’s time is worth more than the writer’s</h3><p>Five more minutes of clear writing saves every reader one follow-up question.</p>
+        </div>
+        <div>
+          <svg viewBox="0 0 360 150" aria-hidden="true">
+            <rect x="110" y="20" width="140" height="110" rx="12" class="g-box"/>
+            <rect x="128" y="40" width="104" height="10" rx="5" class="g-brand"/><rect x="128" y="62" width="84" height="10" rx="5" class="g-mute"/><rect x="128" y="84" width="96" height="10" rx="5" class="g-mute"/><rect x="128" y="106" width="60" height="10" rx="5" class="g-mute"/>
+            <circle cx="40" cy="45" r="9" class="g-ink"/><circle cx="40" cy="105" r="9" class="g-ink"/><circle cx="320" cy="45" r="9" class="g-ink"/><circle cx="320" cy="105" r="9" class="g-ink"/>
+            <path class="g-line" stroke-dasharray="4 5" d="M52 48L108 62M52 102L108 90M308 48L252 62M308 102L252 90"/>
+          </svg>
+          <i>Premise 2 · Corollary 3</i><h3>Write it down where everyone can see it</h3><p>People who were absent or join later can look it up. For a conclusion reached face to face, one written line is enough.</p>
+        </div>
+        <div>
+          <svg viewBox="0 0 360 150" aria-hidden="true">
+            <rect x="20" y="40" width="130" height="70" rx="12" class="g-box"/>
+            <rect x="36" y="58" width="98" height="10" rx="5" class="g-mute"/><rect x="36" y="80" width="66" height="10" rx="5" class="g-mute"/>
+            <path class="g-line" d="M162 75H232M222 65L234 75L222 85"/>
+            <rect x="248" y="40" width="70" height="70" rx="12" class="g-brand"/>
+            <path d="M266 76L279 89L302 62" fill="none" stroke="#0B0C0A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <i>Premise 3 · Corollary 1</i><h3>Every message moves one action forward</h3><p>After reading, the reader knows two things: where things stand, and who does what next.</p>
+        </div>
+      </div>
+    </div>
+    <p class="foot">Corollary 4 (expectations and trust) gets little attention in these texts. We added it, drawing on how much finance cares about expectations.</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="The case">
+  <div class="pad">
+    <p class="eyebrow">Part 3 · What we do</p>
+    <h2 class="h-lg">First, a fictional case: price alerts arrived 18 minutes late</h2>
+    <p class="sub">The example messages on the next three slides all come from this case. People are named by role, and the numbers are illustrative.</p>
+    <div class="body" style="margin-top:30px">
+      <div class="inc">
+        <div>
+          <div class="stats">
+            <div><b>3,200<small></small></b><span>users affected</span></div>
+            <div><b>18<small> min</small></b><span>average delay of price alerts</span></div>
+            <div><b>6<small>×</small></b><span>push volume at market open versus normal</span></div>
+          </div>
+          <p class="qh">Monday 21:30–21:50 (Beijing time), push queue<em>price alerts and news pushes share one queue</em></p>
+          <div class="queue" id="queue"></div>
+          <div class="lg"><span><i style="background:var(--focus)"></i>Price alert: by the time it arrives, the price has left the level the user set</span><span><i style="background:var(--line-2)"></i>News push</span></div>
+        </div>
+        <div>
+          <h3>People involved</h3>
+          <ul>
+            <li><b>Product manager</b>owns price alerts; sender of the example messages</li>
+            <li><b>Operations</b>receives user feedback and asks for progress in the channel</li>
+            <li><b>Engineering</b>owns the push service</li>
+            <li><b>Manager</b>the product manager’s direct manager</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Four parts">
+  <div class="pad">
+    <p class="eyebrow">Part 3 · Basic structure</p>
+    <h2 class="h-lg">Write a message in four parts, covering status, judgment and expectation</h2>
+    <p class="sub">Operations asks in the channel, “Any conclusion on the price-alert issue?” The product manager replies <button type="button" class="term" data-term="bluf">conclusion first</button>:</p>
+    <div class="body" style="margin-top:22px">
+      <div class="anat">
+        <div></div><div class="hd">Message text</div><div class="hd">What it carries</div>
+        <div class="lab">Conclusion<small>what the reader most wants to know</small></div>
+        <div class="part p1">@Operations The cause is identified. The fix ships Thursday and will be verified at Friday’s open.</div>
+        <div class="car"><span>Judgment</span></div>
+        <div class="lab">Basis<small>facts and cause</small></div>
+        <div class="part">On Monday 21:30–21:50, price alerts for about 3,200 users arrived 18 minutes late on average. Push volume at the open was 6× normal, and price alerts shared one queue with news pushes.</div>
+        <div class="car"><span>Status</span><span>Judgment</span></div>
+        <div class="lab">Next step and date<small>who, what, by when</small></div>
+        <div class="part">Engineering moves price alerts to a separate queue, live Thursday 18:00. After Friday’s 21:30 open I will watch the data for an hour and post the result in this thread by 22:30.</div>
+        <div class="car"><span>Expectation · what we will do</span></div>
+        <div class="lab">What I need from you<small>if nothing, write “FYI only”</small></div>
+        <div class="part">Operations, please post the related user-feedback ticket numbers in this thread today; I will use them to verify the impact.</div>
+        <div class="car"><span>Expectation · what we ask of you</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Asking">
+  <div class="pad">
+    <p class="eyebrow">Part 3 · Situations 1/2</p>
+    <h2 class="h-lg">Asking for information or action: first give everything the other person needs to decide</h2>
+    <div class="body s3" style="margin-top:26px"><div class="sc"><h3>Asking</h3><p class="cl">Ask with your own understanding</p><p class="cx">The product manager replies to a monitoring screenshot posted by Engineering</p><div class="rw"><i class="nb">1</i><div><b>Check for yourself first</b>I looked at this chart and Monday night’s alert log.</div></div><div class="rw"><i class="nb">2</i><div><b>State my understanding</b>My understanding is that the push queue backed up after 21:30, and that this is the same issue as the late price alerts.</div></div><div class="rw"><i class="nb">3</i><div><b>Ask a question that is easy to answer</b>Do you need me to assess how many users were affected, or is knowing the cause enough?</div></div></div><div class="sc"><h3>Requesting work</h3><p class="cl">Who, the deliverable, the date, and where it goes</p><p class="cx">The product manager asks Engineering for the current rules</p><div class="rw"><i class="nb">1</i><div><b>Name the person</b>@Engineering, please</div></div><div class="rw"><i class="nb">2</i><div><b>State the deliverable, date and place</b>post the trigger rules for price alerts and the daily push cap in this thread by Thursday 18:00.</div></div><div class="rw"><i class="nb">3</i><div><b>Say what it is for</b>I will put them in section 2 of the proposal, to judge whether the cap needs to change once the queue is split.</div></div></div><div class="sc"><h3>Discussing a proposal</h3><p class="cl">State the problem first, then the proposal</p><p class="cx">The product manager opens a discussion in the project channel</p><div class="rw"><i class="nb">1</i><div><b>Frame the problem as user experience or business outcome</b>Problem: for price alerts in the first 20 minutes after the open, the price has already moved by the time users receive them.</div></div><div class="rw"><i class="nb">2</i><div><b>List proposals point by point</b>I have three proposals: 1. … 2. … 3. …</div></div><div class="rw"><i class="nb">3</i><div><b>Give reasons separately for the contested point</b>Proposal 2 touches on switching to SMS. Engineering and I think we should not: it has no advantage in cost or delivery time.</div></div></div></div>
+    <p class="foot"><b>Sources</b>　How To Ask Questions The Smart Way; Julia Evans, How to ask good questions; xyproblem.info</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Giving">
+  <div class="pad">
+    <p class="eyebrow">Part 3 · Situations 2/2</p>
+    <h2 class="h-lg">Giving information: lead with the conclusion and the expectation, then the basis</h2>
+    <div class="body s3" style="margin-top:26px"><div class="sc"><h3>Progress updates</h3><p class="cl">Update when there is progress, and say what is still open</p><p class="cx">The product manager replies to Operations; the release time is still being confirmed</p><div class="rw"><i class="nb">1</i><div><b>Conclusion in the first sentence</b>@Operations The cause is identified and a draft proposal is ready: [link].</div></div><div class="rw"><i class="nb">2</i><div><b>Status, cause and fix, one sentence each</b>On Monday, alerts for about 3,200 users arrived 18 minutes late on average, because they share a queue with news pushes. The fix is to move them to a separate queue.</div></div><div class="rw"><i class="nb">3</i><div><b>Give an expectation even before it is final</b>The release time is still being confirmed. I will update here by 18:00 today.</div></div></div><div class="sc"><h3>Sharing a document</h3><p class="cl">Three lines before the link</p><p class="cx">The product manager posts the proposal in a newly created project channel</p><div class="rw"><i class="nb">1</i><div><b>What problem this document solves</b>This channel is for fixing the price-alert delay.</div></div><div class="rw"><i class="nb">2</i><div><b>The core conclusion</b>Short term: a separate queue, targeting Thursday. Long term: prioritised push tiers, see section 3. [link]</div></div><div class="rw"><i class="nb">3</i><div><b>Who should read which part, by when</b>@Engineering, please read section 2 by Wednesday 12:00 and confirm whether Thursday is feasible.</div></div></div><div class="sc"><h3>Replying to a request</h3><p class="cl">State your understanding and a completion time</p><p class="cx">The manager says: when you reply to Operations, give the cause and the expected fix date</p><div class="rw"><i class="nb">1</i><div><b>Restate my understanding</b>Got it. I understand Operations needs two things from us: the cause of the delay, and the fix with its release date.</div></div><div class="rw"><i class="nb">2</i><div><b>Give a completion time</b>I will add both in the Operations thread by 17:00 today.</div></div><div class="rw"><i class="nb">3</i><div><b>Write face-to-face conclusions back to the thread</b>For the record, the conclusion from my conversation with Engineering just now: a separate queue, live Thursday.</div></div></div></div>
+    <p class="foot"><b>Sources</b>　BLUF; The Pyramid Principle; GitLab Handbook; Google SRE, Postmortem Culture</p>
+  </div>
+</section>
+
+<section class="slide" aria-label="Further reading">
+  <div class="pad">
+    <p class="eyebrow">Closing · Further reading</p>
+    <h2 class="h-lg">Start with these five, each under ten minutes</h2>
+    <div class="body">
+      <table class="tbl">
+        <thead><tr><th>Text</th><th>When to read it</th></tr></thead>
+        <tbody>
+          <tr><td class="k"><a href="http://www.catb.org/~esr/faqs/smart-questions.html" target="_blank" rel="noopener">How To Ask Questions The Smart Way</a></td><td>before asking engineers or researchers a question</td></tr>
+          <tr><td class="k"><a href="https://jvns.ca/blog/good-questions/" target="_blank" rel="noopener">How to ask good questions</a></td><td>when entering an unfamiliar field and filling in background fast</td></tr>
+          <tr><td class="k"><a href="https://xyproblem.info/" target="_blank" rel="noopener">The XY Problem</a></td><td>before raising a requirement or discussing a proposal</td></tr>
+          <tr><td class="k"><a href="https://nohello.net/en/" target="_blank" rel="noopener">No Hello</a></td><td>at the start of every direct message</td></tr>
+          <tr><td class="k"><a href="https://sre.google/sre-book/postmortem-culture/" target="_blank" rel="noopener">Postmortem Culture</a></td><td>when writing a postmortem or explaining a production issue to stakeholders</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot">Links to the other texts are on the three slides of Part 2.</p>
+  </div>
+</section>
+
+</main>
+
+<nav class="side" aria-label="Contents"></nav>
+<div class="pager"><button type="button" id="pv" aria-label="Previous">←</button><span id="pc"></span><button type="button" id="nx" aria-label="Next">→</button></div>
+
+<script>
+(function(){
+  var GROUPS=[['Opening',1],['Part 1 · A model of collaboration',5],['Part 2 · Classic texts',5],['Part 3 · What we do',4],['Closing',1]];
+  var TERMS={
+    'bluf':['Conclusion first (BLUF)','Bottom Line Up Front: put the conclusion and the request in the first sentence; background and argument come after.','Part 2, “Writing clearly”'],
+    'xy':['The XY Problem','You want to solve X but ask only about your attempted approach Y. Others answer Y, and X stays unsolved.','Part 2, “Asking”; xyproblem.info']
+  };
+  var q=document.getElementById('queue');
+  if(q){for(var a=0;a<26;a++){var b=document.createElement('i');if(a===2||a===9||a===17)b.className='a';q.appendChild(b)}}
+  var slides=[].slice.call(document.querySelectorAll('.slide')),n=slides.length,i=0,K=1;
+  document.documentElement.classList.add('deck');
+  var side=document.querySelector('.side'),btns=[],k=0;
+  GROUPS.forEach(function(g){
+    var h=document.createElement('h4');h.textContent=g[0];side.appendChild(h);
+    for(var j=0;j<g[1];j++,k++){(function(idx){
+      var b=document.createElement('button');b.type='button';
+      b.innerHTML='<i>'+(idx+1)+'</i><span></span>';b.lastChild.textContent=slides[idx].getAttribute('aria-label');
+      b.onclick=function(){go(idx)};side.appendChild(b);btns.push(b);
+    })(k)}
+  });
+  slides.forEach(function(s,j){
+    var pg=document.createElement('span');pg.className='pgno';pg.textContent=(j+1)+' / '+n;s.appendChild(pg);
+    var pop=document.createElement('div');pop.className='pop';s.appendChild(pop);
+  });
+  function fit(){
+    var sw=innerWidth>900?208:0,w=innerWidth-sw,h=innerHeight;
+    K=Math.min(w/1600,h/900)*(sw?0.92:0.97);
+    slides.forEach(function(s){s.style.left=(sw+w/2)+'px';s.style.transform='translate(-50%,-50%) scale('+K+')'});
+  }
+  function hidePop(){slides.forEach(function(s){s.querySelector('.pop').style.display='none'})}
+  function go(j){
+    j=Math.max(0,Math.min(n-1,j));hidePop();
+    slides[i].classList.remove('on');btns[i].classList.remove('now');
+    i=j;slides[i].classList.add('on');btns[i].classList.add('now');
+    btns[i].scrollIntoView({block:'nearest'});
+    document.getElementById('pc').textContent=(i+1)+' / '+n;
+    try{history.replaceState(null,'','#'+(i+1))}catch(e){}
+  }
+  addEventListener('resize',fit);fit();
+  var h0=parseInt(location.hash.slice(1),10);go(h0>=1&&h0<=n?h0-1:0);
+  addEventListener('hashchange',function(){var v=parseInt(location.hash.slice(1),10);if(v>=1&&v<=n&&v-1!==i)go(v-1)});
+  addEventListener('keydown',function(e){
+    if(['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key)>=0){e.preventDefault();go(i+1)}
+    else if(['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key)>=0){e.preventDefault();go(i-1)}
+    else if(e.key==='Home')go(0);else if(e.key==='End')go(n-1);else if(e.key==='Escape')hidePop();
+  });
+  document.getElementById('pv').onclick=function(){go(i-1)};
+  document.getElementById('nx').onclick=function(){go(i+1)};
+  var tx=null;
+  addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
+  addEventListener('touchend',function(e){if(tx==null)return;var d=e.changedTouches[0].clientX-tx;tx=null;if(Math.abs(d)>50)go(i+(d<0?1:-1))},{passive:true});
+  var lastW=0;
+  addEventListener('wheel',function(e){var t=Date.now();if(t-lastW<450||Math.abs(e.deltaY)<20)return;if(e.target.closest&&e.target.closest('.side'))return;lastW=t;go(i+(e.deltaY>0?1:-1))},{passive:true});
+  document.addEventListener('click',function(e){
+    var t=e.target.closest&&e.target.closest('.term');
+    if(!t){if(!(e.target.closest&&e.target.closest('.pop')))hidePop();return}
+    var s=t.closest('.slide'),pop=s.querySelector('.pop'),d=TERMS[t.dataset.term];
+    if(pop.style.display==='block'&&pop.dataset.t===t.dataset.term){hidePop();return}
+    pop.innerHTML='<b></b><br><span></span><small></small>';
+    pop.children[0].textContent=d[0];pop.children[2].textContent=d[1];pop.children[3].textContent='Source: '+d[2];
+    var r=t.getBoundingClientRect(),sr=s.getBoundingClientRect();
+    var x=(r.left-sr.left)/K,y=(r.bottom-sr.top)/K+10;
+    pop.style.left=Math.min(x,1600-440)+'px';pop.style.top=y+'px';pop.dataset.t=t.dataset.term;pop.style.display='block';
+  });
+  try{window.focus()}catch(e){}
+})();
+</script>
+</body>
+</html>
