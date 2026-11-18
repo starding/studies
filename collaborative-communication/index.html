@@ -336,10 +336,14 @@ a:hover{text-decoration-color:var(--focus)}
 .topbar a{color:var(--ink-3);text-decoration:none}
 .topbar a:hover{color:var(--ink)}
 @media (max-width:900px){.topbar{top:8px;right:12px}}
+.topbar{align-items:center}
+.topbar .seg{display:flex;border:1px solid var(--line-2);border-radius:999px;overflow:hidden;background:var(--bg)}
+.topbar .seg a,.topbar .seg b{padding:3px 12px;font-weight:500}
+.topbar .seg b{background:var(--ink);color:var(--bg)}
 </style>
 </head>
 <body>
-<div class="topbar"><a href="../">合集</a><a href="en/">English</a></div>
+<div class="topbar"><a href="../">合集</a><span class="seg"><b>中文</b><a href="en/" data-lang>EN</a></span></div>
 <main id="deck">
 
 <section class="slide dark cover" aria-label="封面">
@@ -767,6 +771,7 @@ a:hover{text-decoration-color:var(--focus)}
     var x=(r.left-sr.left)/K,y=(r.bottom-sr.top)/K+10;
     pop.style.left=Math.min(x,1600-440)+'px';pop.style.top=y+'px';pop.dataset.t=t.dataset.term;pop.style.display='block';
   });
+  [].forEach.call(document.querySelectorAll('.topbar a[data-lang]'),function(a){a.addEventListener('click',function(e){e.preventDefault();location.href=a.getAttribute('href')+location.hash})});
   try{window.focus()}catch(e){}
 })();
 </script>
