@@ -27,6 +27,7 @@ h1 b{font-weight:500}
 footer{margin-top:40px;font-size:14px;color:var(--ink-3)}
 footer a{color:inherit}
 </style>
+<script>/* 访问统计：与博客 xinghua.space 同一个自建统计服务（不用 cookie、不存 IP）。正式域名上每打开一页计一次；本地预览只读不计。data-views 列出的路径（空格分隔）显示浏览数之和，取不到就不显示 */(()=>{if(navigator.webdriver)return;const S='https://xinghua-stats.xinghua-space.workers.dev',P=location.pathname;const got=location.hostname==='xinghua.space'?fetch(S+'/c',{method:'POST',keepalive:true,body:JSON.stringify({p:P,r:document.referrer,w:innerWidth,l:navigator.language,all:1})}):fetch(S+'/v?all&p='+encodeURIComponent(P));const ready=new Promise(r=>document.readyState==='loading'?addEventListener('DOMContentLoaded',r):r());Promise.all([got.then(r=>r.ok?r.json():null),ready]).then(([d])=>{if(!d||!d.pages)return;for(const e of document.querySelectorAll('[data-views]')){const n=e.dataset.views.split(' ').reduce((a,p)=>a+(d.pages[p]||0),0);if(!n)continue;e.textContent=n.toLocaleString('en');e.closest('[hidden]')?.removeAttribute('hidden')}}).catch(()=>{})})()</script>
 </head>
 <body>
 <main>
@@ -36,7 +37,7 @@ footer a{color:inherit}
   <div class="item">
     <h2>基于开源社区经典文本的协作沟通指引<span>A Guide to Collaborative Communication</span></h2>
     <p>协作的模型（目标、信息、决策、沟通、注意力、信任），开源社区与远程团队的经典文本，以及由此得到的日常做法。16 页幻灯。</p>
-    <div class="links"><a href="collaborative-communication/">中文</a><a href="collaborative-communication/en/">English</a><span>2026-11</span></div>
+    <div class="links"><a href="collaborative-communication/">中文</a><a href="collaborative-communication/en/">English</a><span>2026-11<span hidden> · <span data-views="/studies/collaborative-communication/ /studies/collaborative-communication/en/"></span> 次浏览 / views</span></span></div>
   </div>
 
   <footer>中文为正本，英文为译本。源文件见 <a href="https://github.com/starding/studies">github.com/starding/studies</a>。</footer>

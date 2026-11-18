@@ -380,6 +380,7 @@ a:hover{text-decoration-color:var(--focus)}
 .topbar .seg a,.topbar .seg b{padding:3px 12px;font-weight:500}
 .topbar .seg b{background:var(--ink);color:var(--bg)}
 </style>
+<script>/* 访问统计：与博客 xinghua.space 同一个自建统计服务（不用 cookie、不存 IP）。正式域名上每打开一页计一次；本地预览只读不计。data-views 列出的路径（空格分隔）显示浏览数之和，取不到就不显示 */(()=>{if(navigator.webdriver)return;const S='https://xinghua-stats.xinghua-space.workers.dev',P=location.pathname;const got=location.hostname==='xinghua.space'?fetch(S+'/c',{method:'POST',keepalive:true,body:JSON.stringify({p:P,r:document.referrer,w:innerWidth,l:navigator.language,all:1})}):fetch(S+'/v?all&p='+encodeURIComponent(P));const ready=new Promise(r=>document.readyState==='loading'?addEventListener('DOMContentLoaded',r):r());Promise.all([got.then(r=>r.ok?r.json():null),ready]).then(([d])=>{if(!d||!d.pages)return;for(const e of document.querySelectorAll('[data-views]')){const n=e.dataset.views.split(' ').reduce((a,p)=>a+(d.pages[p]||0),0);if(!n)continue;e.textContent=n.toLocaleString('en');e.closest('[hidden]')?.removeAttribute('hidden')}}).catch(()=>{})})()</script>
 </head>
 <body>
 <div class="topbar"><a href="../../">Studies</a><span class="seg"><a href="../" data-lang>中文</a><b>EN</b></span></div>
